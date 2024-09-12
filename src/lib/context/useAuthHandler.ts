@@ -5,6 +5,8 @@ import { LoginParams, UserInfoDTO, getUserInfo } from '../api';
 import { getFromStorage, setToStorage } from '../storage';
 import { useLogin } from '../hooks';
 import { useModal } from './ModalProvider';
+import { useRouter } from 'next/router';
+import { Routes } from '../route';
 
 interface UserInfo extends UserInfoDTO {
   accessToken: string;
@@ -23,7 +25,7 @@ const localStorageName = 'userInfo';
 
 export const useAuthHandler = () => {
   const { openModal } = useModal();
-
+  const router = useRouter();
   const loginMutate = useLogin();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isLoggedin, setIsLoggedin] = useState<boolean>(false);
@@ -43,6 +45,7 @@ export const useAuthHandler = () => {
                     accessToken,
                   });
                   updateIsLoggedIn(true);
+                  router.push(Routes.HOME);
                 }
               })
               .catch((error) => {
