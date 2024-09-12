@@ -6,12 +6,14 @@ import { SocialSignUpParams, socialSignUp } from '@/lib/api';
 import { useAuth, useModal } from '@/lib/context';
 import { Routes } from '@/lib/route';
 import { MUTATION_KEY } from '../config';
+import { useAddFolder } from '../folder';
 
 export const useSNSSignUp = ({
   socialProvider,
 }: Pick<SocialSignUpParams, 'socialProvider'>) => {
-  const { updateIsLoggedIn, updateUserInfo } = useAuth();
   const router = useRouter();
+  const { updateIsLoggedIn, updateUserInfo } = useAuth();
+  const addFolderMutate = useAddFolder();
   const { openModal } = useModal();
   const muatateKey =
     socialProvider === 'google'
@@ -34,6 +36,7 @@ export const useSNSSignUp = ({
           accessToken: res.data.accessToken,
         };
 
+        addFolderMutate.mutate(email);
         updateUserInfo(newUserInfo);
         updateIsLoggedIn(true);
         router.push(Routes.HOME);
