@@ -1,14 +1,14 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { match } from 'ts-pattern';
-import { AuthContext } from '@/lib/context';
+import { useAuth } from '@/lib/context';
 import { useLoginAccessibility } from '@/lib/hooks';
 import HeaderLogoImage from '@/assets/images/headerLogo.png';
 import ProfileImage from '@/assets/images/profileImage.png';
 
 const Header = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout } = useAuth();
   const [logoutView, setLogoutView] = useState<boolean>(false);
 
   const toggleProfileMenu = () => {

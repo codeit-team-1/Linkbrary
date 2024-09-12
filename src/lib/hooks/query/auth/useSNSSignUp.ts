@@ -1,17 +1,16 @@
 import { AxiosError } from 'axios';
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
 
 import { SocialSignUpParams, socialSignUp } from '@/lib/api';
-import { AuthContext, useModal } from '@/lib/context';
+import { useAuth, useModal } from '@/lib/context';
 import { Routes } from '@/lib/route';
 import { MUTATION_KEY } from '../config';
 
 export const useSNSSignUp = ({
   socialProvider,
 }: Pick<SocialSignUpParams, 'socialProvider'>) => {
-  const { updateIsLoggedIn, updateUserInfo } = useContext(AuthContext);
+  const { updateIsLoggedIn, updateUserInfo } = useAuth();
   const router = useRouter();
   const { openModal } = useModal();
   const muatateKey =

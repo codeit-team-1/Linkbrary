@@ -1,9 +1,9 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FavoriteLinkTypes, getFavoriteLinkList } from '@/lib/api';
-import { AuthContext } from './AuthProvider';
+import { useAuth } from './AuthProvider';
 
 export const useLinkHandler = () => {
-  const { isLoggedin } = useContext(AuthContext);
+  const { isLoggedin } = useAuth();
   const [linkList, setLinkList] = useState<FavoriteLinkTypes[]>([]);
   const [, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

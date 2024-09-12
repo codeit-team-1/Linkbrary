@@ -1,8 +1,7 @@
-import { useContext } from 'react';
-import { AuthContext } from '@/lib/context';
+import { useAuth } from '@/lib/context';
 
 export const useLoginAccessibility = () => {
-  const { userInfo, isLoggedin } = useContext(AuthContext);
+  const { userInfo, isLoggedin } = useAuth();
 
   return {
     userInfo,

@@ -1,9 +1,9 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FolderTypes, getFolderList } from '@/lib/api';
-import { AuthContext } from './AuthProvider';
+import { useAuth } from './AuthProvider';
 
 export const useFolderHandler = () => {
-  const { isLoggedin } = useContext(AuthContext);
+  const { isLoggedin } = useAuth();
   const [folderList, setFolderList] = useState<FolderTypes[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<FolderTypes>({
     createdAt: '',
