@@ -5,17 +5,25 @@ import { useMutation } from '@tanstack/react-query';
 import { signUp } from '@/lib/api/';
 import { useModal } from '@/lib/context';
 import { MUTATION_KEY } from '../config';
+import { useAddFolder } from '../folder';
 
 export const useSignUp = () => {
   const { openModal } = useModal();
   const router = useRouter();
+  const addFolderMutate = useAddFolder();
 
   return useMutation({
     mutationKey: [MUTATION_KEY.signUp],
     mutationFn: signUp,
-    onSuccess() {
-      /** @Todo default folder 만들기 */
-      router.push('/login');
+    onSuccess(data) {
+      if (data.data.accessToken) {
+        const { accessToken } = data.data;
+        addFolderMutate.mutate({
+          folderName: '전체',
+          config: { headers: { Authorization: `Bearer ${accessToken}` } },
+        });
+        router.push('/login');
+      }
     },
     onError(error) {
       if (error instanceof AxiosError) {

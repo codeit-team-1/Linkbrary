@@ -14,11 +14,15 @@ export const getFolderList = async () => {
   return response.data ?? [];
 };
 
-export const addFolder = async ({ folderName }: PostFolderParams) => {
+export const addFolder = async ({
+  folderName,
+  config = {},
+}: PostFolderParams) => {
   const params = { name: folderName };
   const response = await instance.post<FolderTypes[]>(
     API_PATH.folder.default,
     params,
+    config,
   );
 
   return response.data ?? [];

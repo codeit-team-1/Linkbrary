@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios';
+
 export interface FolderTypes {
   createdAt: string;
   id: number;
@@ -11,6 +13,7 @@ export interface GetFolderParams {
 
 export interface PostFolderParams {
   folderName: string;
+  config?: AxiosRequestConfig;
 }
 
 export interface PostLinkParams {
