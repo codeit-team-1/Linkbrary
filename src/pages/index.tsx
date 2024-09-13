@@ -154,7 +154,7 @@ const Home = () => {
                 />
               </SwiperSlide>
               <SwiperSlide className="relative">
-                <span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-51%] w-[8.438rem] h-[438rem] border-2 border-solid border-primary rounded-[11px] lg:translate-x-[-55%] lg:w-[13.438rem] lg:h-[13.375rem] md:translate-x-[-50%] md:w-[10rem] md:h-[10rem]" />
+                <span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-51%] w-[8.438rem] h-[8.438rem] border-2 border-solid border-primary rounded-[11px] lg:translate-x-[-55%] lg:w-[13.438rem] lg:h-[13.375rem] md:translate-x-[-50%] md:w-[10rem] md:h-[10rem]" />
                 <Image
                   className="absolute bottom-0 right-0 w-[1.875rem] h-[1.875rem] lg:w-[2.875rem] lg:h-[2.875rem] lg:right-5 md:w-[2.375rem] md:h-[2.375rem]"
                   src={DownloadIcon}
