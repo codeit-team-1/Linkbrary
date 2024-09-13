@@ -181,8 +181,8 @@ const config: Config = {
       },
     },
     animation: {
-      textSlide: 'textSlide 6s ease-in-out infinite',
-      textSlideMo: 'textSlideMo 6s ease-in-out infinite',
+      textSlide: 'textSlide 6s ease-in-out infinite 1s',
+      textSlideMo: 'textSlideMo 6s ease-in-out infinite 1s',
       cardRotate: 'cardRotate 4s ease-in-out infinite',
       cardRotateDelay: 'cardRotate 4s ease-in-out infinite 2s',
       cardScale: 'cardScale 5s linear infinite',
