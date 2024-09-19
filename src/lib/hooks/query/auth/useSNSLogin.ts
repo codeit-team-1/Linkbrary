@@ -1,8 +1,13 @@
 import { AxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 
-import { SocialLoginParams, socialLogin } from '@/lib/api';
-import { UserInfo, useAuth, useModal } from '@/lib/context';
+import {
+  SocialLoginParams,
+  UserInfoDTO,
+  saveToken,
+  socialLogin,
+} from '@/lib/api';
+import { useAuth, useModal } from '@/lib/context';
 import { MUTATION_KEY } from '../config';
 
 export const useSNSLogin = ({
@@ -18,20 +23,27 @@ export const useSNSLogin = ({
     ],
     mutationFn: ({ token }: Pick<SocialLoginParams, 'token'>) =>
       socialLogin({ socialProvider, token }),
-    onSuccess(res) {
+    onSuccess: async (res) => {
       if (res) {
-        const accessToken = res.data.access_token;
         const { id, email, name, imageSource, createdAt } = res.data.user;
-        const newUserInfo: UserInfo = {
+        const newUserInfo: UserInfoDTO = {
           id,
           email,
           name,
           imageSource,
           createdAt,
-          accessToken,
         };
-        updateUserInfo(newUserInfo);
-        updateIsLoggedIn(true);
+        try {
+          await saveToken(res.data.access_token);
+          updateUserInfo(newUserInfo);
+          updateIsLoggedIn(true);
+        } catch (error) {
+          openModal({
+            type: 'alert',
+            key: 'failSaveToken',
+            message: '토큰 저장에 실패했습니다 다시 로그인해주세요.',
+          });
+        }
       }
     },
     onError(error) {

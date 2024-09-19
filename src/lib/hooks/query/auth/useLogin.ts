@@ -23,7 +23,6 @@ export const useLogin = () => {
             if (response.data) {
               updateUserInfo({
                 ...response.data,
-                accessToken,
               });
               updateIsLoggedIn(true);
               router.push(Routes.HOME);
@@ -41,7 +40,7 @@ export const useLogin = () => {
             openModal({
               type: 'alert',
               key: 'loginError401',
-              message: '로그인이 만료되었습니다. 다시 로그인해주세요.',
+              message: '로그인 정보가 다릅니다. 다시 확인해주세요.',
             });
             break;
           case 400:

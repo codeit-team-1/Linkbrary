@@ -1,4 +1,5 @@
-import { API_PATH, instance } from '../config';
+import axios from 'axios';
+import { API_PATH, NEXT_API_PATH, instance } from '../config';
 import {
   AuthDTO,
   EmailConfirmParams,
@@ -78,5 +79,19 @@ export const socialLogin = async ({
     JSON.stringify(params),
   );
 
+  return response;
+};
+
+export const saveToken = async (accessToken: string) => {
+  const response = await axios.post(NEXT_API_PATH.token.save, { accessToken });
+  return response;
+};
+
+export const deleteToken = async () => {
+  await axios.post(NEXT_API_PATH.token.delete);
+};
+
+export const userInformation = async () => {
+  const response = await axios.post(NEXT_API_PATH.userInfo);
   return response;
 };
