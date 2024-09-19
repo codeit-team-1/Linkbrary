@@ -12,7 +12,7 @@ export const LinkCards = ({ filterLinks, searchValue }: LinkComponentProps) => {
   const viewLinks =
     searchValue.trim() === '' ? allLinks : linkEntitiesToDtos(filterLinks);
   return (
-    <section className="p-8 lg:container lg:mx-auto">
+    <section className="py-8 lg:mx-auto">
       {viewLinks.length > 0 ? (
         <ul className="grid grid-flow-row auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {viewLinks.map((card: TLinkDto) => {

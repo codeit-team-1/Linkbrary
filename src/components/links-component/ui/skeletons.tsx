@@ -27,7 +27,7 @@ export const LinkCardsSkeleton = () => {
   const width = clientSizeAction.data?.width;
   const pageSize = getPageSize(width || 0);
   return (
-    <section className="p-8 lg:container lg:mx-auto">
+    <section className="py-8 lg:container lg:mx-auto">
       <ul className="grid grid-flow-row auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array(pageSize)
           .fill(0)

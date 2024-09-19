@@ -1,9 +1,11 @@
 import Head from 'next/head';
 
 import { AuthHeader, LoginForm, SNSAuth, AuthStyle as S } from '@/components';
+import { useRedirectionWithAuth } from '@/lib/hooks';
 import { Routes } from '@/lib/route';
 
 const Login = () => {
+  useRedirectionWithAuth();
   return (
     <>
       <Head>

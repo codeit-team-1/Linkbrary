@@ -111,7 +111,7 @@ const DeleteModalBody = ({ currentLink }: { currentLink?: TLinkDto }) => {
     <>
       <h2>{currentLink?.title || currentLink?.url}</h2>
       {mutateAction.isError && (
-        <div>삭제에 실패했습니다. 다시 시도 해 주세요.</div>
+        <div>삭제에 실패했습니다. 다시 시도해주세요.</div>
       )}
       {mutateAction.isPending ? (
         <div>요청 처리 중...</div>

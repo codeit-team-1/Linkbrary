@@ -1,6 +1,8 @@
 import { TLinkDto } from '@/lib/react-query';
 import { DropBoxComponent } from './link-card.dropbox';
 
+const CardTextStyle = 'h-4 whitespace-nowrap overflow-hidden overflow-ellipsis';
+
 export const CardBody = ({
   id,
   relativeTime,
@@ -21,8 +23,8 @@ export const CardBody = ({
           <DropBoxComponent id={id} />
         </li>
       </ul>
-      <div>{title}</div>
-      <div>{description}</div>
+      <div className={CardTextStyle}>{title}</div>
+      <div className={CardTextStyle}>{description}</div>
       <div>{createdAt}</div>
     </div>
   );

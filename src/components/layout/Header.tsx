@@ -1,26 +1,12 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { match } from 'ts-pattern';
-import { useAuth } from '@/lib/context';
 import { useLoginAccessibility } from '@/lib/hooks';
 import HeaderLogoImage from '@/assets/images/headerLogo.png';
-import ProfileImage from '@/assets/images/profileImage.png';
+import { ProfileMenu, RenderLink } from './ui';
 
 const Header = () => {
-  const { logout } = useAuth();
-  const [logoutView, setLogoutView] = useState<boolean>(false);
-
-  const toggleProfileMenu = () => {
-    setLogoutView(!logoutView);
-  };
-
-  const handleUserLogout = () => {
-    setLogoutView(false);
-    logout();
-  };
-
-  const { isLoginAccessible, userInfo } = useLoginAccessibility();
+  const { isLoginAccessible } = useLoginAccessibility();
 
   return (
     <header className="bg-bg">
@@ -28,9 +14,10 @@ const Header = () => {
         <h1>
           <Link href="/">
             <Image
-              className="w-[5.563rem] h-4 md:w-[8.313rem] md:h-6"
+              className="w-[5.563rem] h-auto md:w-[8.313rem]"
               src={HeaderLogoImage}
               alt="linkbrary"
+              priority
             />
           </Link>
         </h1>
@@ -40,44 +27,8 @@ const Header = () => {
             .with(true, () => (
               <>
                 {/** @Todo 해당 영역 보여지기전에 텀 수정 */}
-                <Link
-                  href="/favorite"
-                  className="flex items-center justify-center w-[4.375rem] h-[1.875rem] border border-solid border-primary rounded-[0.25rem] text-xs md:w-[5.813rem] mr-4 md:h-[2.313rem] md:text-sm md:mr-6"
-                >
-                  ⭐️ 즐겨찾기
-                </Link>
-                <div className="relative ">
-                  <button
-                    type="button"
-                    className="flex items-center justify-center"
-                    onClick={() => {
-                      toggleProfileMenu();
-                    }}
-                  >
-                    <Image
-                      className="mr-[0.375rem]"
-                      width={28}
-                      height={28}
-                      src={ProfileImage}
-                      alt="프로필 이미지"
-                    />
-                    <span className="hidden md:block">{userInfo?.name}</span>
-                  </button>
-                  <ul className="absolute left-[50%] translate-x-[-50%] bottom-[-2.813rem]">
-                    <li
-                      className={`w-20 h-[2.188rem] text-center leading-[2.188rem] text-sm bg-white rounded-[0.25rem] border border-solid border-primary transition-opacity duration-1000 ${logoutView ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          handleUserLogout();
-                        }}
-                      >
-                        로그아웃
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+                <RenderLink />
+                <ProfileMenu />
               </>
             ))
             .with(false, () => (

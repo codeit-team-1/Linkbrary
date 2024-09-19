@@ -1,66 +1,56 @@
 import Image from 'next/image';
-import { AxiosError } from 'axios';
-import { FieldValues, useForm } from 'react-hook-form';
+import { ComponentType } from 'react';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  useForm,
+} from 'react-hook-form';
+import { match } from 'ts-pattern';
 
-import { useModal } from '@/lib/context';
-import { usePasswordVisuality, useSignUp, useValidateEmail } from '@/lib/hooks';
+import LoadingSpinner from '@/assets/icons/ic_loading_spinner.svg';
+import ValidatedConfirm from '@/assets/icons/ic_confirm_circle.svg';
+import { LoadingProps, withLoading } from '@/lib/hoc';
+import {
+  usePasswordVisuality,
+  useSignUp,
+  useValidateEmailOnBlur,
+} from '@/lib/hooks';
 
 import { CommonButton, CommonInputWithError } from '../common';
+import { LoginFormProps, PasswordVisible } from './LoginForm';
 
-export const SignUpForm = () => {
-  const signUpMutate = useSignUp();
-  const validateEmailMutate = useValidateEmail();
-  const { openModal } = useModal();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    setError,
-  } = useForm({ mode: 'all' });
-  const {
-    visible: passwordVisible,
-    visibleIcon: passwordVisibleIcon,
-    handleVisible: handlePasswordVisible,
-  } = usePasswordVisuality();
-  const {
-    visible: passwordConfirmVisible,
-    visibleIcon: passwordConfirmVisibleIcon,
-    handleVisible: handlePasswordConfirmVisible,
-  } = usePasswordVisuality();
-
-  const onSubmit = async (values: FieldValues) => {
-    const { email, name, password } = values;
-    try {
-      const data = await validateEmailMutate.mutateAsync(email);
-      if (data) {
-        if (data.status === 200 && data.data?.isUsableEmail) {
-          signUpMutate.mutate({ email, name, password });
-        } else {
-          setError('email', { message: '중복된 이메일입니다.' });
-        }
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 409) {
-          setError('email', { message: '중복된 이메일입니다.' });
-          openModal({
-            type: 'alert',
-            key: 'emailValidateError',
-            message: '중복된 이메일입니다.',
-          });
-          return;
-        }
-      }
-      openModal({
-        type: 'alert',
-        key: 'emailValidateError',
-        message: '알 수 없는 에러입니다. 계속되면 관리자에게 문의해주세요.',
-      });
-    }
+type RHFPropertyType = {
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues, undefined>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+};
+interface SignUpProps extends LoginFormProps {
+  passwordConfirmVisible: PasswordVisible;
+  RHFProperty: RHFPropertyType;
+  emailValidation: {
+    isValidateSuccess: boolean;
+    isValidating: boolean;
+    validatingIcon: React.ReactNode;
+    validateEmail: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
   };
-  const formClassName =
-    'w-full flex flex-col justify-center items-start gap-[12px]';
-  const iconClassName = 'absolute top-6 right-4 cursor-pointer';
+}
+const formClassName = 'w-full flex flex-col justify-center items-start gap-3';
+const confirmIconClassName = 'absolute top-4 right-4 w-8 h-8';
+const loadingIconClassName =
+  'absolute top-4 right-4 w-8 h-8 text-green animate-spinner';
+const passwordIconClassName =
+  'absolute top-5 right-4 w-5 h-5 cursor-pointer before:animate-prixClipFix';
+export const SignUpFormComponent = ({
+  passwordVisible,
+  passwordConfirmVisible,
+  RHFProperty,
+  emailValidation,
+  onSubmit,
+}: SignUpProps) => {
+  const { register, errors, isValid, handleSubmit } = RHFProperty;
   return (
     <form className={formClassName} onSubmit={handleSubmit(onSubmit)}>
       <CommonInputWithError
@@ -68,6 +58,8 @@ export const SignUpForm = () => {
         placeholder="link@brary.com"
         errorMessage={`${errors.email?.message}`}
         errorMessageVisible={!!errors.email}
+        onBlur={emailValidation.validateEmail}
+        Icon={emailValidation.validatingIcon}
         register={register('email', {
           required: '이메일을 입력해주세요.',
           pattern: {
@@ -100,14 +92,14 @@ export const SignUpForm = () => {
         htmlfor="password"
         placeholder="대/소문자, 숫자, 특수문자(!@#$%^&*) 포함 8자 이상"
         errorMessage={`${errors.password?.message}`}
-        type={passwordVisible ? 'text' : 'password'}
+        type={passwordVisible.visible ? 'text' : 'password'}
         errorMessageVisible={!!errors.password}
         Icon={
           <Image
-            className={iconClassName}
-            src={passwordVisibleIcon}
+            className={passwordIconClassName}
+            src={passwordVisible.visibleIcon}
             alt="비밀번호 보기"
-            onClick={handlePasswordVisible}
+            onClick={passwordVisible.handleVisible}
           />
         }
         register={register('password', {
@@ -129,14 +121,14 @@ export const SignUpForm = () => {
         htmlfor="passwordConfirm"
         placeholder="비밀번호를 다시 한 번 입력해주세요."
         errorMessage={`${errors.passwordConfirm?.message}`}
-        type={passwordConfirmVisible ? 'text' : 'password'}
+        type={passwordConfirmVisible.visible ? 'text' : 'password'}
         errorMessageVisible={!!errors.passwordConfirm}
         Icon={
           <Image
-            src={passwordConfirmVisibleIcon}
-            className={iconClassName}
+            src={passwordConfirmVisible.visibleIcon}
+            className={passwordIconClassName}
             alt="비밀번호 확인 보기"
-            onClick={handlePasswordConfirmVisible}
+            onClick={passwordConfirmVisible.handleVisible}
           />
         }
         register={register('passwordConfirm', {
@@ -151,12 +143,77 @@ export const SignUpForm = () => {
       >
         비밀번호 확인
       </CommonInputWithError>
-      <CommonButton
-        mode="submit"
-        disabled={validateEmailMutate.isPending || !isValid}
-      >
+      <CommonButton mode="submit" disabled={!isValid}>
         회원가입
       </CommonButton>
     </form>
   );
 };
+
+type SignUpWithLoading = SignUpProps & LoadingProps;
+
+const withSignUpHandler =
+  (WrappedComponent: ComponentType<SignUpWithLoading>) => () => {
+    const signUpMutate = useSignUp();
+    const {
+      register,
+      handleSubmit,
+      formState: { errors, isValid },
+      setError,
+    } = useForm({ mode: 'all' });
+
+    const emailValidation = useValidateEmailOnBlur({
+      isError: !!errors.email,
+      setError,
+      validationField: 'email',
+    });
+
+    const passowrdVisible = usePasswordVisuality();
+    const passwordConfirmVisible = usePasswordVisuality();
+
+    const RHFProperty: RHFPropertyType = {
+      register,
+      errors,
+      handleSubmit,
+      isValid,
+    };
+
+    const onSubmit = async (values: FieldValues) => {
+      const { email, name, password } = values;
+      signUpMutate.mutate({ email, name, password });
+    };
+
+    const validatingSuccess = match(emailValidation.isValidateSuccess)
+      .with(true, () => (
+        <Image
+          className={confirmIconClassName}
+          src={ValidatedConfirm}
+          alt="인증된 이메일"
+        />
+      ))
+      .with(false, () => <></>)
+      .exhaustive();
+
+    const validatingIcon = match(emailValidation.isValidating)
+      .with(true, () => (
+        <Image
+          className={loadingIconClassName}
+          src={LoadingSpinner}
+          alt="이메일 검증 로딩"
+        />
+      ))
+      .with(false, () => validatingSuccess)
+      .exhaustive();
+    return (
+      <WrappedComponent
+        emailValidation={{ ...emailValidation, validatingIcon }}
+        RHFProperty={RHFProperty}
+        isLoading={signUpMutate.isPending}
+        onSubmit={onSubmit}
+        passwordVisible={passowrdVisible}
+        passwordConfirmVisible={passwordConfirmVisible}
+      />
+    );
+  };
+
+export const SignUpForm = withSignUpHandler(withLoading(SignUpFormComponent));

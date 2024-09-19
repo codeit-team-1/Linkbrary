@@ -1,5 +1,5 @@
-import { useContext, useMemo } from 'react';
-import { FolderContext } from '@/lib/context';
+import { useMemo } from 'react';
+import { useFolder } from '@/lib/context';
 import { FolderTypes } from '@/lib/api';
 import { CommonButton } from '@/components';
 
@@ -8,7 +8,7 @@ interface FolderProps {
 }
 
 export const Folder = ({ folder }: FolderProps) => {
-  const { selectedFolder, setSelectedFolder } = useContext(FolderContext);
+  const { selectedFolder, setSelectedFolder } = useFolder();
 
   const isActive = selectedFolder.id === folder.id;
   const folderButtonClassNames = useMemo(

@@ -1,7 +1,7 @@
 import { ModalContentsProps } from '@/components/common/modal/Modal';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-interface ModalType extends ModalContentsProps {
+export interface ModalType extends ModalContentsProps {
   key: string;
 }
 
@@ -14,10 +14,16 @@ export interface ModalContextType {
 export const useModalHandler = () => {
   const [modalList, setModalList] = useState<ModalType[]>([]);
   const openModal = (modalContent: ModalType) => {
+    if (modalList.some((e) => e.key === modalContent.key)) {
+      throw new Error('이미 열려있는 Modal Key 입니다.');
+    }
     setModalList((prev) => [...prev, { ...modalContent }]);
   };
   const closeModal = (modalKey: string) => {
     setModalList((prev) => prev.filter((e) => e.key !== modalKey));
   };
-  return { modalList, openModal, closeModal };
+
+  const modalHanlder = useMemo(() => ({ openModal, closeModal }), []);
+
+  return { modalList, ...modalHanlder };
 };

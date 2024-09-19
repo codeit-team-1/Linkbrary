@@ -1,5 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
-import { FolderContext, FolderProvider } from '@/lib/context';
+import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import {
+  FolderProvider,
+  useFolder,
+  ModalType,
+  useAuth,
+  useModal,
+} from '@/lib/context';
 import { AddLink, SearchBar, FolderList, FolderMenuList } from '@/components';
 import { linkSearch, LinkSearchData } from '@/lib/api';
 import {
@@ -11,7 +18,9 @@ import {
 } from '@/components/links-component';
 
 const MainContent = () => {
-  const { selectedFolder } = useContext(FolderContext);
+  const { selectedFolder } = useFolder();
+  const { logout } = useAuth();
+  const { openModal } = useModal();
   const [searchText, setSearchText] = useState<string>('');
   /** @TODO debouncing 사용하여 onChange로 검색 가능하도록 하기  */
   const [searchValue, setSearchValue] = useState<string>('');
@@ -28,7 +37,30 @@ const MainContent = () => {
       const links = await linkSearch(option);
       setFilterLinks(links.data.list);
     } catch (error) {
-      console.error(error);
+      if (error instanceof AxiosError) {
+        const modalOption: ModalType = {
+          type: 'alert',
+          key: 'linkSearchDefault',
+        };
+        switch (error.status) {
+          case 401:
+            modalOption.key = 'expireTokenError';
+            modalOption.message =
+              '로그인이 만료되었습니다. 다시 로그인해주세요.';
+            logout();
+            break;
+          case 400:
+            modalOption.key = 'httpRequestError';
+            modalOption.message = '잘못된 요청입니다. 요청 값을 확인해주세요.';
+            break;
+          default:
+            modalOption.key = 'linkSearchUnknownError';
+            modalOption.message =
+              '알 수 없는 에러입니다. 계속되는 경우 관리자에게 문의해주세요.';
+            break;
+        }
+        openModal(modalOption);
+      }
     }
   };
 
@@ -74,8 +106,8 @@ const MainContent = () => {
           </h3>
           <FolderMenuList />
         </div>
+        <LinkComponent filterLinks={filterLinks} searchValue={searchValue} />
       </div>
-      <LinkComponent filterLinks={filterLinks} searchValue={searchValue} />
     </main>
   );
 };

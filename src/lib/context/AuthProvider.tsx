@@ -4,7 +4,6 @@ import { AuthContextType, useAuthHandler } from './useAuthHandler';
 export const AuthContext = createContext<AuthContextType>({
   userInfo: null,
   isLoggedin: false,
-  login: () => {},
   logout: () => {},
   updateUserInfo: () => {},
   updateIsLoggedIn: () => {},

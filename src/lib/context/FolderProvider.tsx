@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { FolderTypes } from '@/lib/api';
 import { useFolderHandler } from './useFolderHandler';
 
@@ -31,4 +31,12 @@ export const FolderProvider = ({ children }: FolderProviderProps) => {
       {children}
     </FolderContext.Provider>
   );
+};
+
+export const useFolder = () => {
+  const folderContext = useContext(FolderContext);
+  if (!folderContext) {
+    throw new Error('컨텍스트는 프로바이더 안에서만 사용가능합니다.');
+  }
+  return folderContext;
 };

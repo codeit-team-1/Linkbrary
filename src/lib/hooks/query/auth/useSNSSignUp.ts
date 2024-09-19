@@ -42,6 +42,15 @@ export const useSNSSignUp = ({
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 400) {
+          if (error.response?.data.message) {
+            openModal({
+              type: 'alert',
+              key: 'SNSSignUpExistError',
+              message: '이미 등록된 사용자 입니다.',
+            });
+            router.push(Routes.LOGIN);
+            return;
+          }
           openModal({
             type: 'alert',
             key: 'SNSSignUpError400',

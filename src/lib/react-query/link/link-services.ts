@@ -48,7 +48,7 @@ export const linkServices = {
         params: {
           page: query?.page,
           pageSize: query?.pageSize,
-          keyword: query?.keyword,
+          search: query?.keyword,
         },
         signal,
       },

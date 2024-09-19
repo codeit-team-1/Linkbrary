@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import searchIcon from '@/assets/icons/ic_search.svg';
-import closeIcon from '@/assets/images/close.png';
+import closeIcon from '@/assets/icons/ic_close.svg';
+import { CommonButton } from '@/components';
 
 type SearchSubmit = (e: React.FormEvent<HTMLFormElement>) => void;
 type SearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -23,12 +24,12 @@ export const SearchBar = ({
   };
 
   return (
-    <div className="m-auto max-w-[1060px] h-auto px-4 py-[15px] flex justify-between items-center rounded-[10px] bg-[#f5f5f5]">
+    <div className="m-auto max-w-[66.25rem] h-auto px-4 py-[0.9375rem] flex justify-between items-center rounded-[10px] bg-[#f5f5f5]">
       <form className="w-full" onSubmit={searchSubmit}>
         <div className="w-full flex justify-center items-center gap-3">
           <Image src={searchIcon} alt="검색 아이콘" width={16} height={16} />
           <input
-            className="w-full focus:outline-none bg-[#f5f5f5] placeholder-[#666666] font-[Pretendard] not-italic leading-[24px]"
+            className="w-full focus:outline-none bg-[#f5f5f5] placeholder-[#666666] font-[Pretendard] not-italic leading-[1.5rem]"
             type="text"
             value={searchText}
             placeholder="링크를 검색해 보세요"
@@ -37,9 +38,9 @@ export const SearchBar = ({
         </div>
       </form>
       {searchText && (
-        <button type="button" onClick={searchDelete}>
+        <CommonButton mode="default" className="" onClick={searchDelete}>
           <Image src={closeIcon} alt="삭제 아이콘" width={24} height={24} />
-        </button>
+        </CommonButton>
       )}
     </div>
   );

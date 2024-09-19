@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-export const useSignUpWithKakao = () => {
+export const useSignWithKakao = (redirectUri: Partial<Routes>) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
@@ -11,7 +11,7 @@ export const useSignUpWithKakao = () => {
 
   useEffect(() => {
     if (code) {
-      router.push(Routes.SET_NAME);
+      router.push(redirectUri);
     }
     return () => {
       if (code) {

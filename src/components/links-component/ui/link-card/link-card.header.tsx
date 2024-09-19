@@ -70,7 +70,7 @@ export const CardHeader = ({
       </Link>
       <Image
         id={String(id)}
-        className="absolute top-5 right-3 hover:scale-110 cursor-pointer"
+        className="absolute top-5 right-3 hover:scale-110"
         src={favorite ? starSelected : star}
         alt=""
         width={34}

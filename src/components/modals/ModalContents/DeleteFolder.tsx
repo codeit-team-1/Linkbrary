@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { FolderContext } from '@/lib/context';
+import { useFolder } from '@/lib/context';
 import { CommonButton } from '@/components';
 
 interface DeleteFolderProps {
@@ -9,7 +8,7 @@ interface DeleteFolderProps {
 export const DeleteFolder = ({
   handleDeleteButtonClick,
 }: DeleteFolderProps) => {
-  const { selectedFolder } = useContext(FolderContext);
+  const { selectedFolder } = useFolder();
 
   return (
     <div>

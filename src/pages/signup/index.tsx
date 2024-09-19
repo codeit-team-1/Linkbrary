@@ -1,8 +1,11 @@
 import Head from 'next/head';
+
 import { AuthHeader, SNSAuth, SignUpForm, AuthStyle as S } from '@/components';
+import { useRedirectionWithAuth } from '@/lib/hooks';
 import { Routes } from '@/lib/route';
 
 const SignUp = () => {
+  useRedirectionWithAuth();
   return (
     <>
       <Head>

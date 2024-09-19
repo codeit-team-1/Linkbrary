@@ -36,5 +36,5 @@ interface SocialUserInfoDTO extends UserInfoDTO {
 }
 export interface SocialLoginDTO {
   user: SocialUserInfoDTO;
-  accessToken: string;
+  access_token: string;
 }

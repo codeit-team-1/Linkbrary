@@ -18,7 +18,7 @@ export const LinkCard = ({ data }: LinkCardProps) => {
     url,
   } = data;
   return (
-    <div className="shadow-lg rounded-2xl">
+    <div className="shadow-lg rounded-2xl cursor-pointer hover:scale-105 hover:shadow-xl">
       <CardHeader
         title={title}
         imageSource={imageSource}

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { ComponentType } from 'react';
 import { match } from 'ts-pattern';
 
-import closeIcon from '@/assets/images/close.png';
+import closeIcon from '@/assets/icons/ic_close.svg';
 
 import { useModal } from '@/lib/context';
 import { ModalStyle as S } from './Modal.style';

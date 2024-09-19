@@ -1,28 +1,28 @@
 import Image from 'next/image';
+import { ComponentType } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 
-import { useAuth } from '@/lib/context';
-import { usePasswordVisuality } from '@/lib/hooks';
+import { LoadingProps, withLoading } from '@/lib/hoc';
+import { useLogin, usePasswordVisuality } from '@/lib/hooks';
 import { CommonButton, CommonInputWithError } from '../common';
 
-export const LoginForm = () => {
-  const { login } = useAuth();
-  const {
-    visible: passwordVisible,
-    visibleIcon: passwordVisibleIcon,
-    handleVisible: handlePasswordVisible,
-  } = usePasswordVisuality();
+export type PasswordVisible = {
+  visible: boolean;
+  visibleIcon: string;
+  handleVisible: () => void;
+};
+export interface LoginFormProps {
+  onSubmit: (v: FieldValues) => void;
+  passwordVisible: PasswordVisible;
+}
 
+const LoginFormComponent = ({ onSubmit, passwordVisible }: LoginFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ mode: 'onBlur' });
+  } = useForm({ mode: 'onChange' });
 
-  const onSubmit = (values: FieldValues) => {
-    const { email, password } = values;
-    login({ email, password });
-  };
   const formClassName =
     'w-full flex flex-col justify-center items-start gap-[12px]';
   const iconClassName = 'absolute top-6 right-4 cursor-pointer';
@@ -35,12 +35,7 @@ export const LoginForm = () => {
         errorMessage={`${errors.email?.message}`}
         errorMessageVisible={!!errors.email}
         register={register('email', {
-          required: '필수 항목입니다.',
-          pattern: {
-            value:
-              /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
-            message: '이메일 형식으로 작성해주세요.',
-          },
+          required: '이메일을 입력해주세요.',
         })}
       >
         이메일
@@ -50,14 +45,14 @@ export const LoginForm = () => {
         htmlfor="password"
         placeholder="********"
         errorMessage={`${errors.password?.message}`}
-        type={passwordVisible ? 'text' : 'password'}
+        type={passwordVisible.visible ? 'text' : 'password'}
         errorMessageVisible={!!errors.password}
         Icon={
           <Image
             className={iconClassName}
-            src={passwordVisibleIcon}
+            src={passwordVisible.visibleIcon}
             alt="비밀번호 보기"
-            onClick={handlePasswordVisible}
+            onClick={passwordVisible.handleVisible}
           />
         }
         register={register('password', {
@@ -72,3 +67,28 @@ export const LoginForm = () => {
     </form>
   );
 };
+
+type LoginFormPropsWithLoading = LoginFormProps & LoadingProps;
+
+const withLoginHandler = (
+  WrappedComponent: ComponentType<LoginFormPropsWithLoading>,
+) => {
+  return () => {
+    const loginMutate = useLogin();
+    const passwordVisible = usePasswordVisuality();
+
+    const onSubmit = async (values: FieldValues) => {
+      const { email, password } = values;
+      loginMutate.mutate({ email, password });
+    };
+    return (
+      <WrappedComponent
+        onSubmit={onSubmit}
+        passwordVisible={passwordVisible}
+        isLoading={loginMutate.isPending}
+      />
+    );
+  };
+};
+
+export const LoginForm = withLoginHandler(withLoading(LoginFormComponent));

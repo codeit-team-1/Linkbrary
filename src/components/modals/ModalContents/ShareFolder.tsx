@@ -1,82 +1,14 @@
-import { useEffect, useCallback, useContext } from 'react';
 import Image from 'next/image';
 import kakaoIcon from '@/assets/images/kakaoTalk.png';
 import facebookIcon from '@/assets/images/facebook.png';
 import copyLinkIcon from '@/assets/images/copyLink.png';
-import { FolderContext, useModal } from '@/lib/context';
+import { useFolder } from '@/lib/context';
+import { useFolderShare } from '@/lib/hooks';
 import { CommonButton } from '@/components';
 
 export const ShareFolder = () => {
-  const { openModal } = useModal();
-  const { selectedFolder } = useContext(FolderContext);
-  /** @TODO 적당한 base url 설정하기 - 배포용 주소로 */
-  // const BASE_URL = `https://deploy-preview-40--dev-linkbrary.netlify.app`;
-  const BASE_URL = `http://localhost:3000`;
-  const SHARING_URL = `${BASE_URL}/shared/${selectedFolder.id}`;
-
-  const { Kakao, open } = window;
-  const initializeKakao = useCallback(() => {
-    if (Kakao && !Kakao.isInitialized()) {
-      Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_API_KEY);
-    }
-  }, []);
-  useEffect(() => {
-    initializeKakao();
-  }, [initializeKakao]);
-
-  /** @TODO 폴더 공유 시 보일 디폴트 이미지 추가하기 */
-  const kakaoTalkShare = () => {
-    if (!window.Kakao || !window.Kakao.isInitialized()) {
-      openModal({
-        type: 'alert',
-        key: 'kakaoInitError',
-        message: `카카오톡 공유 기능이 아직 초기화되지 않았습니다.`,
-      });
-      return;
-    }
-
-    Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: `공유된 "${selectedFolder.name}" 폴더`,
-        description: `"${selectedFolder.name}" 폴더에 저장된 링크 목록입니다`,
-        imageUrl: '/src/assets/images/sharingDefaultImage.png',
-        link: {
-          mobileWebUrl: SHARING_URL,
-          webUrl: SHARING_URL,
-        },
-      },
-    });
-  };
-
-  const facebookShare = () => {
-    return open(`http://www.facebook.com/sharer/sharer.php?u=${SHARING_URL}`);
-  };
-
-  const clipboardCopy = (): void => {
-    if (!navigator.clipboard) {
-      openModal({
-        type: 'alert',
-        key: 'invalidBrowserError',
-        message: `복사하기가 지원되지 않는 브라우저입니다.`,
-      });
-      return;
-    }
-
-    navigator.clipboard
-      .writeText(SHARING_URL)
-      .then(() => {
-        /** @TODO 확인 모달 띄우기 */
-        alert('클립보드에 복사되었습니다.');
-      })
-      .catch(() => {
-        openModal({
-          type: 'alert',
-          key: 'copyError',
-          message: `복사를 다시 시도해주세요.`,
-        });
-      });
-  };
+  const { kakaoTalkShare, facebookShare, clipboardCopy } = useFolderShare();
+  const { selectedFolder } = useFolder();
 
   const shareMethodList = [
     {

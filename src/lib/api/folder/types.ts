@@ -10,7 +10,7 @@ export interface GetFolderParams {
 }
 
 export interface PostFolderParams {
-  folderName: string;
+  newFolderName: string;
 }
 
 export interface PostLinkParams {

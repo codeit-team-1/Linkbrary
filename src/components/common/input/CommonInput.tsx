@@ -26,8 +26,8 @@ const CommonInput = ({
         className={`${defaultLayout} ${defaultFont} ${defaultStyle} ${className} `}
         type={type ?? 'text'}
         placeholder={placeholder}
-        {...rest}
         {...register}
+        {...rest}
       />
       {Icon}
     </div>

@@ -1,4 +1,6 @@
-import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { validateLink } from '@/lib/utils/links';
 import { timeAgo } from './timeAgo';
 
 interface CardProps {
@@ -15,17 +17,25 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ card }) => {
   const defaultImage = '/images/NoImage.jpg';
+  const { url } = card;
+  const startHttp = validateLink(url);
 
   return (
-    <div
+    <Link
       className="border rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform duration-300 transform hover:scale-105 hover:shadow-xl"
-      onClick={() => window.open(`https://${card.url}`, '_blank')}
+      href={`${startHttp ? url : `https://${url}`}`}
+      target="_blank"
     >
-      <img
-        src={card.imageSource || defaultImage}
-        alt={card.title}
-        className="w-full h-48 object-cover"
-      />
+      <div className="relative w-full h-0 pt-[56.25%]">
+        <Image
+          priority
+          className="rounded-2xl"
+          src={card.imageSource || defaultImage}
+          alt={card.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+      </div>
       <div className="p-4">
         <p className="font-pretendard text-[13px] font-[400] leading-[15.51px] text-left text-gray-400 pb-2">
           {timeAgo(card.createdAt)}
@@ -38,7 +48,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
           {new Date(card.createdAt).toLocaleDateString()}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
 

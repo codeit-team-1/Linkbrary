@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { FolderContext } from '@/lib/context';
+import { useFolder } from '@/lib/context';
 import { CommonInput, CommonButton } from '@/components';
 
 interface ChangeFolderNameProps {
@@ -11,7 +10,7 @@ export const ChangeFolderName = ({
   getInputValue,
   handleChangeButtonClick,
 }: ChangeFolderNameProps) => {
-  const { selectedFolder } = useContext(FolderContext);
+  const { selectedFolder } = useFolder();
 
   return (
     <div>

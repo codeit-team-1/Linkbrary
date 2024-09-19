@@ -82,8 +82,9 @@ const Home = () => {
         </div>
 
         <Image
-          className="w-full max-w-[18.875rem] h-[11.125rem] lg:max-w-[69.938rem] lg:h-[41.188rem] md:max-w-[43.625rem] md:h-auto"
+          className="w-full max-w-[18.875rem] h-auto lg:max-w-[69.938rem]  md:max-w-[43.625rem]"
           src={KeyVisualImage}
+          priority
           alt="키비주얼 이미지"
           data-aos="zoom-out-up"
           data-aos-duration="1500"
@@ -147,8 +148,7 @@ const Home = () => {
             >
               <SwiperSlide>
                 <Image
-                  width={244}
-                  height={239}
+                  className="w-[244px] h-auto"
                   src={LinkCardImage}
                   alt="원하는 링크를 저장하세요 카드 이미지1"
                 />
@@ -156,21 +156,19 @@ const Home = () => {
               <SwiperSlide className="relative">
                 <span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-51%] w-[8.438rem] h-[8.438rem] border-2 border-solid border-primary rounded-[11px] lg:translate-x-[-55%] lg:w-[13.438rem] lg:h-[13.375rem] md:translate-x-[-50%] md:w-[10rem] md:h-[10rem]" />
                 <Image
-                  className="absolute bottom-0 right-0 w-[1.875rem] h-[1.875rem] lg:w-[2.875rem] lg:h-[2.875rem] lg:right-5 md:w-[2.375rem] md:h-[2.375rem]"
+                  className="absolute bottom-0 right-0 w-[1.875rem] h-auto lg:w-[2.875rem] lg:right-5 md:w-[2.375rem]"
                   src={DownloadIcon}
                   alt="다운로드 아이콘"
                 />
                 <Image
-                  width={244}
-                  height={239}
+                  className="w-[244px] h-auto"
                   src={LinkCardDogImage}
                   alt="원하는 링크를 저장하세요 카드 이미지2"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <Image
-                  width={244}
-                  height={239}
+                  className="w-[244px] h-auto"
                   src={LinkCardBackImage}
                   alt="원하는 링크를 저장하세요 카드 이미지3"
                 />

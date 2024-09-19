@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from 'react';
 import Image from 'next/image';
-import closeIcon from '@/assets/images/close.png';
+import closeIcon from '@/assets/icons/ic_close.svg';
 import { CommonButton } from '@/components';
 
 interface CommonModalProps extends ComponentPropsWithoutRef<'div'> {

@@ -12,7 +12,6 @@ import { AuthProvider, ModalProvider } from '@/lib/context';
 import '@/styles/globals.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ThumbnailImage from '@/assets/images/sharingDefaultImage.png';
-import Favicon from '@/assets/icons/favicon/favicon.ico';
 
 declare global {
   interface Window {
@@ -36,7 +35,6 @@ const App = ({ Component, pageProps }: AppProps) => {
         />
         <meta property="og:image" content={ThumbnailImage.src} />
         <meta property="og:url" content="" />
-        <link rel="icon" href={Favicon.src} />
       </Head>
 
       <QueryClientProvider client={queryClient}>
