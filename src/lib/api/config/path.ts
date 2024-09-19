@@ -40,3 +40,11 @@ export const API_PATH = {
     emailCheck: '/users/check-email',
   },
 };
+
+export const NEXT_API_PATH = {
+  token: {
+    save: '/api/save-token/cookie',
+    delete: '/api/delete-token/cookie',
+  },
+  userInfo: '/api/get-userInfo/with-cookie',
+};
