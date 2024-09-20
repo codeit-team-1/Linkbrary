@@ -3,20 +3,17 @@ import searchIcon from '@/assets/icons/ic_search.svg';
 import closeIcon from '@/assets/icons/ic_close.svg';
 import { CommonButton } from '@/components';
 
-type SearchSubmit = (e: React.FormEvent<HTMLFormElement>) => void;
 type SearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
 
 interface SearchBarProps {
   searchText: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
-  searchSubmit: SearchSubmit;
   searchOnChange: SearchOnChange;
 }
 
 export const SearchBar = ({
   searchText,
   setSearchText,
-  searchSubmit,
   searchOnChange,
 }: SearchBarProps) => {
   const searchDelete = () => {
@@ -25,7 +22,7 @@ export const SearchBar = ({
 
   return (
     <div className="m-auto max-w-[66.25rem] h-auto px-4 py-[0.9375rem] flex justify-between items-center rounded-[10px] bg-[#f5f5f5]">
-      <form className="w-full" onSubmit={searchSubmit}>
+      <form className="w-full">
         <div className="w-full flex justify-center items-center gap-3">
           <Image src={searchIcon} alt="검색 아이콘" width={16} height={16} />
           <input
