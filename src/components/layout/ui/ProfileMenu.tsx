@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import ProfileImage from '@/assets/images/profileImage.png';
 import { useLoginAccessibility } from '@/lib/hooks';
 import { useAuth } from '@/lib/context';
@@ -8,7 +7,6 @@ import { useAuth } from '@/lib/context';
 export const ProfileMenu = () => {
   const { logout } = useAuth();
   const { userInfo } = useLoginAccessibility();
-  const router = useRouter();
   const [logoutView, setLogoutView] = useState<boolean>(false);
 
   const toggleProfileMenu = () => {
@@ -18,7 +16,6 @@ export const ProfileMenu = () => {
   const handleUserLogout = () => {
     setLogoutView(false);
     logout();
-    router.push('/login');
   };
 
   const logoutClassName = `w-20 h-[2.188rem] text-center leading-[2.188rem] text-sm bg-white rounded-[0.25rem] border border-solid border-primary transition-opacity duration-1000 ${logoutView ? 'opacity-100' : 'opacity-0 pointer-events-none'}`;
