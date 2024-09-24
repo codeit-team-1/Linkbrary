@@ -16,26 +16,31 @@ import {
   ModalStoreProvider,
   ModifyAndDeleteModal,
 } from '@/components/links-component';
+import { LinkCardsSkeleton } from '@/components/links-component/ui/skeletons';
 
 const MainContent = () => {
   const { selectedFolder, setSelectedFolder } = useFolder();
   const { logout } = useAuth();
   const { openModal } = useModal();
   const [searchText, setSearchText] = useState<string>('');
-  /** @TODO debouncing 사용하여 onChange로 검색 가능하도록 하기  */
-  const [searchValue, setSearchValue] = useState<string>('');
   const [filterLinks, setFilterLinks] = useState<LinkSearchData[]>([]);
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
-  const fetchLinks = async () => {
+  const fetchLinks = async (query: string) => {
     const option = {
       page: 0,
       pageSize: 0,
-      search: searchValue,
+      search: query,
     };
-
+    setSearchLoading(true);
     try {
-      const links = await linkSearch(option);
-      setFilterLinks(links.data.list);
+      if (query) {
+        const links = await linkSearch(option);
+        setFilterLinks(links.data.list);
+        setSearchLoading(false);
+      } else {
+        setFilterLinks([]);
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         const modalOption: ModalType = {
@@ -61,12 +66,13 @@ const MainContent = () => {
         }
         openModal(modalOption);
       }
+    } finally {
+      setSearchLoading(false);
     }
   };
 
-  const searchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearchValue(searchText);
+  const searchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
     setSelectedFolder({
       createdAt: '',
       id: 0,
@@ -74,13 +80,17 @@ const MainContent = () => {
     });
   };
 
-  const searchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
-
   useEffect(() => {
-    fetchLinks();
-  }, [searchValue]);
+    const searchDebounce = setTimeout(() => {
+      if (searchText) {
+        fetchLinks(searchText);
+      } else {
+        setFilterLinks([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(searchDebounce);
+  }, [searchText]);
 
   return (
     <main className="select-none">
@@ -92,13 +102,12 @@ const MainContent = () => {
           <SearchBar
             searchText={searchText}
             setSearchText={setSearchText}
-            searchSubmit={searchSubmit}
             searchOnChange={searchOnChange}
           />
         </div>
-        {searchValue && (
+        {searchText && (
           <h2 className="text-lg font-bold mb-5 md:mb-10 md:text-3xl">
-            {searchValue}
+            {searchText}
             <span className="text-secondary-60">에 대한 검색 결과입니다.</span>
           </h2>
         )}
@@ -111,7 +120,11 @@ const MainContent = () => {
           </h3>
           <FolderMenuList />
         </div>
-        <LinkComponent filterLinks={filterLinks} searchValue={searchValue} />
+        {searchLoading ? (
+          <LinkCardsSkeleton />
+        ) : (
+          <LinkComponent filterLinks={filterLinks} searchValue={searchText} />
+        )}
       </div>
     </main>
   );
