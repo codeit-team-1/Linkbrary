@@ -14,7 +14,7 @@
     "aos": "^3.0.0-beta.6",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.5",
-    "next": "14.2.7",
+    "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
