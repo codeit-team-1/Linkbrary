@@ -3,6 +3,7 @@ import { addLink } from '@/lib/api';
 import { useFolder, useModal } from '@/lib/context';
 import { useQueryClient } from '@tanstack/react-query';
 import {
+  folderOptions,
   linkOptions,
   TLinkDto,
   TLinksResponse,
@@ -40,7 +41,7 @@ export const useAddLink = () => {
       openModal({
         type: 'alert',
         key: 'addLinkError_noFolder',
-        message: `아래에서 저장할 폴더를 선택해주세요.`,
+        message: `아래에서 저장할 폴더를 선택해주세요. 전체 폴더에는 저장할 수 없습니다.`,
       });
       return;
     }
@@ -55,7 +56,7 @@ export const useAddLink = () => {
         },
       } as TQueryResponse<TLinksResponse<TLinkDto[]>>;
       queryClient.setQueryData(currentQuerykey, newQueryData);
-      queryClient.refetchQueries({ queryKey: ['folders', 'all'], stale: true });
+      queryClient.refetchQueries(folderOptions.all());
 
       openModal({
         type: 'alert',

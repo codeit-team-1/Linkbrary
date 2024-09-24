@@ -19,7 +19,7 @@ import {
 import { LinkCardsSkeleton } from '@/components/links-component/ui/skeletons';
 
 const MainContent = () => {
-  const { selectedFolder } = useFolder();
+  const { selectedFolder, setSelectedFolder } = useFolder();
   const { logout } = useAuth();
   const { openModal } = useModal();
   const [searchText, setSearchText] = useState<string>('');
@@ -73,6 +73,11 @@ const MainContent = () => {
 
   const searchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+    setSelectedFolder({
+      createdAt: '',
+      id: 0,
+      name: '전체',
+    });
   };
 
   useEffect(() => {

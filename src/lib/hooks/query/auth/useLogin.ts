@@ -41,7 +41,7 @@ export const useLogin = () => {
             openModal({
               type: 'alert',
               key: 'loginError401',
-              message: '로그인이 만료되었습니다. 다시 로그인해주세요.',
+              message: '잘못된 로그인 정보입니다. 다시 확인해주세요.',
             });
             break;
           case 400:
